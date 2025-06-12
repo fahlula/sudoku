@@ -1,17 +1,22 @@
 package br.com.dio.ui.custom.screen;
 
+import br.com.dio.model.Space;
 import br.com.dio.service.BoardService;
+import br.com.dio.ui.custom.Input.NumberText;
 import br.com.dio.ui.custom.button.CheckGameStatusBotton;
 import br.com.dio.ui.custom.button.FinishGameButton;
 import br.com.dio.ui.custom.button.ResetButton;
 import br.com.dio.ui.custom.frame.MainFrame;
 import br.com.dio.ui.custom.panel.MainPanel;
+import br.com.dio.ui.custom.panel.SudokoSector;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static javax.swing.JOptionPane.YES_NO_OPTION;
@@ -32,12 +37,41 @@ public class MainScreen {
     public void buildMainScreen(){
         JPanel mainPanel = new MainPanel(dimension);
         JFrame mainFrame = new MainFrame(dimension, mainPanel);
+
+        for (int r = 0; r < BoardService.BOARD_LIMIT; r = r + 3) {
+            var endRow = r + 2;
+            for (int c = 0; c < BoardService.BOARD_LIMIT; c = c +3) {
+                var endCol = c + 2;
+
+                var spaces = getSpacesFromSector(boardService.getSpaces(),
+                        c,endCol,r,endRow
+                );
+
+                mainPanel.add(generateSection(spaces));
+            }
+        }
+
         addResetButton(mainPanel);
         addCheckGameStatusButton(mainPanel);
         addFinishiGameButton(mainPanel);
 
         mainFrame.revalidate();
         mainFrame.repaint();
+    }
+
+    private List<Space> getSpacesFromSector(List<List<Space>>spaces, final int initCol,final int endCol, final int initRow,final int endRow){
+        List<Space> spaceSector = new ArrayList<>();
+        for (int r = initRow; r <= endRow; r++) {
+            for (int c = initCol; c <= endCol; c++) {
+                spaceSector.add(spaces.get(c).get(r));
+            }
+        } return spaceSector;
+    }
+
+    private JPanel generateSection(final List<Space> spaces){
+        List<NumberText> fields = new ArrayList<>(spaces.stream().map(NumberText::new).toList());
+        return new SudokoSector(fields);
+
     }
 
     private void addResetButton(JPanel mainPanel) {

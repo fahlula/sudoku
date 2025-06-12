@@ -23,6 +23,7 @@ public class NumberText extends JTextField {
         this.setHorizontalAlignment(CENTER);
         this.setDocument(new NumberTextLimit());
         this.setEnabled(!space.isFixed());
+
         if (space.isFixed()){
             this.setText(space.getActual().toString());
         }
@@ -43,6 +44,7 @@ public class NumberText extends JTextField {
             public void changedUpdate(DocumentEvent e) {
                 changeSpace();
             }
+
             private void changeSpace(){
                 if (getText().isEmpty()){
                     space.clearSpace();
