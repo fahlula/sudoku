@@ -1,6 +1,8 @@
 package br.com.dio.ui.custom.Input;
 
 import br.com.dio.model.Space;
+import br.com.dio.service.EventEnum;
+import br.com.dio.service.EventListener;
 
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -10,7 +12,8 @@ import java.awt.Font;
 
 import static java.awt.Font.PLAIN;
 
-public class NumberText extends JTextField {
+public class NumberText extends JTextField implements EventListener {
+
     private final Space space;
 
     public NumberText(Space space) {
@@ -53,5 +56,12 @@ public class NumberText extends JTextField {
                 space.setActual(Integer.parseInt(getText()));
             }
         });
+    }
+
+    @Override
+    public void update(EventEnum eventType) {
+        if (eventType.equals(EventEnum.CLEAR_SPACE) && (this.isEnabled())){
+            this.setText("");
+        }
     }
 }
