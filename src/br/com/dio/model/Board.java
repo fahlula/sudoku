@@ -11,7 +11,7 @@ public class Board {
 
     private final List<List<Space>> spaces;
 
-    public Board(List<List<Space>> spaces) {
+    public Board(final List<List<Space>> spaces) {
         this.spaces = spaces;
     }
 
@@ -33,7 +33,7 @@ public class Board {
         }
 
         return spaces.stream().flatMap(Collection::stream)
-                .anyMatch(s -> nonNull(s.getActual()) && s.getActual().equals(s.getExpected()));
+                .anyMatch(s -> nonNull(s.getActual()) && !s.getActual().equals(s.getExpected()));
     }
 
     public boolean changeValue(final int col,final int row,final int value){
@@ -46,7 +46,7 @@ public class Board {
         return true;
     }
 
-    public boolean clearValue(final int col,final int row){
+    public boolean clearValue(final int col, final int row){
         var space = spaces.get(col).get(row);
         if (space.isFixed()) {
             return false;
